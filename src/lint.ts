@@ -28,7 +28,7 @@ export async function lintDocument(document: vscode.TextDocument) {
   } catch (error) {
     console.error('Error linting the document:', error);
     vscode.window.showErrorMessage('Error linting the document. See the console for more information.');
-    return []; // Return an empty array in case of error to avoid further errors in the caller function
+    return {errors : {errors: []}}; // Return an empty array in case of error to avoid further errors in the caller function
   }
 }
 

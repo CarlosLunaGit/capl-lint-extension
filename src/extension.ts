@@ -145,16 +145,29 @@ export function activate(context: vscode.ExtensionContext) {
 
 function getWebviewContent(errors: any, fileName: string | undefined) {
     // Start the HTML structure
-    let contentHtml = errors.errors.map((error: any, index: any) => {
-        return `
-            <div class="error">
-                <button onclick="toggleDetail(${index})" class="collapsible">Error on Line: ${error.line}</button>
-                <div class="content" id="detail-${index}" style="display: none;">
-                    <p>${error.error}</p>
+    let contentHtml;
+
+    if (errors.errors.length === 0) {
+        contentHtml =`
+                <div class="error">
+                    <div class="content" id="" style="display: block;">
+                        <p>No errors found! You are awesome :)</p>
+                    </div>
                 </div>
-            </div>
-        `;
-    }).join('');
+            `;
+    } else {
+        contentHtml = errors.errors.map((error: any, index: any) => {
+            return `
+                <div class="error">
+                    <button onclick="toggleDetail(${index})" class="collapsible">Error on Line: ${error.line}</button>
+                    <div class="content" id="detail-${index}" style="display: none;">
+                        <p>${error.error}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
 
     // Return full HTML page
     return `
