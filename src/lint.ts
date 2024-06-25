@@ -9,27 +9,27 @@ export async function lintDocument(document: vscode.TextDocument) {
     'code': documentData
   });
 
-  let config = {
-    method: 'post',
-    maxBodyLength: Infinity,
-    url: 'http://localhost:3000/lint',
-    headers: {
-      'Cookie': 'ARRAffinity=c82c30dbd554f70842d9b1bd407167e0fe5bf4a88594522e4dc923b169330686',
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    data: data
-  };
-
   // let config = {
   //   method: 'post',
   //   maxBodyLength: Infinity,
-  //   url: 'http://capllintserver.azurewebsites.net/lint',
+  //   url: 'http://localhost:3000/lint',
   //   headers: {
   //     'Cookie': 'ARRAffinity=c82c30dbd554f70842d9b1bd407167e0fe5bf4a88594522e4dc923b169330686',
   //     'Content-Type': 'application/x-www-form-urlencoded'
   //   },
   //   data: data
   // };
+
+  let config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: 'http://capllintserver.azurewebsites.net/lint',
+    headers: {
+      'Cookie': 'ARRAffinity=c82c30dbd554f70842d9b1bd407167e0fe5bf4a88594522e4dc923b169330686',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data: data
+  };
 
   try {
     const response = await axios.request(config);
