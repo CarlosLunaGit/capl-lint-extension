@@ -154,7 +154,7 @@ This extension contributes the following settings:
 
 ---
 
-### 0.0.5/6
+### 0.0.7
 
 * General Bug's fixes on Tokenizer logic
 
