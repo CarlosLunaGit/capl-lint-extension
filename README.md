@@ -9,18 +9,20 @@ Feedback and new features please contact us at: aess.technologies@gmail.com
 ## Features
 
 * Static code analisys for detection of:
-    1. Missing # for Include's statements
-    2. Not allowed statements within INCLUDES Block
-    3. Not allowed statements within VARIABLES Block
+    1. [Missing # for Include's statements](#anchor-1)
+    2. [Not allowed statements within INCLUDES Block](#anchor-2)
+    3. [Not allowed statements within VARIABLES Block](#anchor-3)
     4. Missing semicolons for Line statements
     5. Duplicated variables declaration (Work in progress)
     6. Declaration of local VARIABLES not at the beginning portion of a FUNCTION (Work in progress)
     7. Missing comma to separate PARAMETERS in function declaration (Work in progress)
     8. Wrong FUNCTION declaration types (Work in progress)
+    9. Parse errors
+        * Unexpected literals
 
 ## Examples
 
-1. **Missing # for Include's statements**
+1. <h3 id="anchor-1">Missing # for Include's statements</h3>
 
 ```cpp
 1.  includes
@@ -35,7 +37,7 @@ Errors:
 * line: 5, error: 'ERROR: On statement \"include \"..\\TestLibraries\\utils.cin\"\" (expecting \"#\")'
 
 ---
-2. **Not allowed statements within INCLUDES Block**
+2. <h3 id="anchor-2">Not allowed statements within INCLUDES Block</h3>
 
 ```cpp
 1.  includes
@@ -51,7 +53,7 @@ Errors:
 * line: 6, error: 'ERROR: On statement \"byte variable1[3]={0x01,0x02,0x03};\" (unexpected \"statement, only \"#include\" statements are allowed within the Include blocks\")'
 
 ---
-3. **Not allowed statements within VARIABLES Block**
+3. <h3 id="anchor-3">Not allowed statements within VARIABLES Block</h3>
 
 ```cpp
 1.  variables
@@ -109,9 +111,9 @@ Errors:
 5.            int y = 10;
 6.            int z = 20;
 7.        }
-8.        void MainTest ()
+8.  void MainTest ()
 9.        {
-10.            int z;
+10.            int z; // Duplicated variable
 11.            z = x + y;
 12.
 13.            write("%d",z);
@@ -157,5 +159,11 @@ This extension contributes the following settings:
 ### 0.0.7
 
 * General Bug's fixes on Tokenizer logic
+
+---
+
+### 0.0.8
+
+* Enabling link for Users Donations thru Stripe
 
 ---

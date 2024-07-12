@@ -294,6 +294,7 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
                 <div class="tab">
                     <button class="tablinks" onclick="openTab(event, 'WorkingArea')">Working Area</button>
                     <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
+                    <button class="tablinks" onclick="openTab(event, 'DonationsSubscriptions')">Donations & Subscriptions</button>
                 </div>
 
 				<div id="WorkingArea" class="tabcontent action-label">
@@ -320,6 +321,19 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
                 <div id="Settings" class="tabcontent action-label">
                     <h2>Settings</h2>
                     <p>Adjust your lint settings here. (***Under construction to be released on: V1.1.0***)</p>
+                </div>
+
+                <div id="DonationsSubscriptions" class="tabcontent action-label">
+                    <h2>Donations</h2>
+                    <p>Would you like to support this project?, Why not buying us a Coffee? ;)</p>
+
+
+
+                    <a href="https://buy.stripe.com/3cs6poeID2nKaDm7ss"> Donate with Stripe</a>
+                    </a>
+
+                    <h2>Subscriptions</h2>
+                    <p>Manage your Subscription here. (***Under construction to be released on: V1.1.0***)</p>
                 </div>
 			</div>
 
