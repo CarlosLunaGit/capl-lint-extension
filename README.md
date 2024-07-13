@@ -12,9 +12,9 @@ Feedback and new features please contact us at: aess.technologies@gmail.com
     1. [Missing # for Include's statements](#anchor-1)
     2. [Not allowed statements within INCLUDES Block](#anchor-2)
     3. [Not allowed statements within VARIABLES Block](#anchor-3)
-    4. Missing semicolons for Line statements
-    5. Duplicated variables declaration (Work in progress)
-    6. Declaration of local VARIABLES not at the beginning portion of a FUNCTION (Work in progress)
+    4. [Missing semicolons for Line statements](#anchor-4)
+    5. [Duplicated variables declaration](#anchor-5)
+    6. [Declaration of local VARIABLES not at the beginning portion of a FUNCTION](#anchor-6)
     7. Missing comma to separate PARAMETERS in function declaration (Work in progress)
     8. Wrong FUNCTION declaration types (Work in progress)
     9. Parse errors
@@ -71,7 +71,7 @@ Errors:
 * line: 8, error: 'ERROR: On statement "#include "..\\myLibraries\\utils.cin"" (unexpected "statement, only variables definitions and initializations are allowed within the Variable block")''
 
 ---
-4. **Missing semicolons for Line statements**
+4. <h3 id="anchor-4">Missing semicolons for Line statements</h3>
 
 ```cpp
 1.  variables
@@ -101,7 +101,7 @@ Errors:
 * line: 18, error: 'ERROR: On statement \"write(\"%d\",w)\" (expecting ";")'
 
 ---
-4. **Duplicated variables declaration (Scoped to the active file)** (Work in progress)
+5. <h3 id="anchor-5">Duplicated variables declaration (Scoped to the active file)</h3>
 
 ```cpp
 1.  variables
@@ -122,7 +122,42 @@ Errors:
 ```
 
 Errors:
-* line: 10, error: 'TBD'
+* line: 10, error: 'ERROR: Variable already declared at row 6'
+
+---
+6. <h3 id="anchor-6">Declaration of local VARIABLES not at the beginning portion of a FUNCTION</h3>
+
+```cpp
+1.  /*@!Encoding:1252*/
+2.        includes
+3.        {
+4.
+5.        }
+6.
+7.        variables {
+8.
+9.        }
+10.
+11.        void MainTest ()
+12.        {
+13.            int x = 10;
+14.            int y = 20;
+15.            int z;
+16.
+17.            z = x + y;
+18.
+19.            // A comment statement
+20.            if (1){
+21.            write("%d",z);
+22.                int w = 10; // Error here
+23.                write("%d",w);
+24.            }
+25.
+26.        }
+```
+
+Errors:
+* line: 22, error: 'ERROR: On statement \"int w = 10;\" (unexpected \"Declaration of local VARIABLES must happen at the beginning of a FUNCTION block\")'
 
 ---
 
@@ -158,12 +193,18 @@ This extension contributes the following settings:
 
 ### 0.0.7
 
-* General Bug's fixes on Tokenizer logic
+* General Bug's fixes on Tokenizer logic.
 
 ---
 
 ### 0.0.8
 
-* Enabling link for Users Donations thru Stripe
+* Enabling link for Users Donations thru Stripe.
+
+---
+
+### 0.0.9
+
+* Support for Variables not declared at the start of a block and duplicated variable declaration.
 
 ---
