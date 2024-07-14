@@ -20,6 +20,12 @@ Feedback and new features please contact us at: aess.technologies@gmail.com
     9. Parse errors
         * Unexpected literals
 
+## Usage
+
+Just trigger the extension while having an active file, it will take the active file and perform the analysis for you.
+
+![Demo](https://github.com/CarlosLunaGit/capl-lint-extension/tree/master/images/triggering-extension.gif?raw=true)
+
 ## Examples
 
 1. <h3 id="anchor-1">Missing # for Include's statements</h3>
@@ -206,5 +212,6 @@ This extension contributes the following settings:
 ### 0.0.9
 
 * Support for Variables not declared at the start of a block and duplicated variable declaration.
+* Stats section on report (Shows only total number of errors)
 
 ---

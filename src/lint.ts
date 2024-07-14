@@ -18,7 +18,7 @@ export async function lintDocument(document: vscode.TextDocument) {
   //     'Content-Type': 'application/x-www-form-urlencoded'
   //   },
   //   data: data
-  // };
+  // };y
 
   let config = {
     method: 'post',

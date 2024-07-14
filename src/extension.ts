@@ -146,8 +146,8 @@ export function activate(context: vscode.ExtensionContext) {
 function getWebviewContent(errors: any, fileName: string | undefined) {
     // Start the HTML structure
     let contentHtml;
-
-    if (errors.errors.length === 0) {
+    let errorsCount = errors.errors.length;
+    if (errorsCount === 0) {
         contentHtml =`
                 <div class="error">
                     <div class="content" id="" style="display: block;">
@@ -281,6 +281,41 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
             }
             .section{
                 padding-bottom: 1em;
+                margin-top: 10px;
+            }
+
+            .section button,
+            .section input{
+                border-radius: 5px;
+
+            }
+
+            .stats-cards {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+
+            }
+
+            .card {
+                padding: 10px;
+                border-radius: 10px;
+                color: white;
+                text-align: center;
+                flex-grow: 1;
+                margin: 5px;
+            }
+
+            .lint-errors {
+                border: 1px solid #e74c3c;
+            }
+
+            .warnings {
+                border: 1px solid #f39c12; /* Orange for warnings */
+            }
+
+            .style-errors {
+                border: 1px solid #3498db; /* Blue for style errors */
             }
         </style>
     </head>
@@ -306,6 +341,25 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
                     <div class="section">
                         <div class="section"><label for="actions">Actions:</label></div>
                         <button onclick="retriggerLint()" class="text-button">Re-trigger Lint</button>
+                    </div>
+                    <div class="section">
+                        <div class="section"><label for="actions">Stats:</label></div>
+                        <div class="stats-cards">
+                            <div class="card lint-errors">
+                                <h3>Lint Errors</h3>
+                                <p>${errorsCount}</p>
+                            </div>
+                            <!--
+                            <div class="card warnings">
+                                <h3>Warnings</h3>
+                                <p>5</p>
+                            </div>
+                            <div class="card style-errors">
+                                <h3>Style Errors</h3>
+                                <p>3</p>
+                            </div>
+                            -->
+                        </div>
                     </div>
                     <div class="section">
                         <div class="section"><label for="results">Results from:</label></div>
