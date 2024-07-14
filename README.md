@@ -24,7 +24,7 @@ Feedback and new features please contact us at: aess.technologies@gmail.com
 
 Just trigger the extension while having an active file, it will take the active file and perform the analysis for you.
 
-<img src="./images/triggering-extension.gif?raw=true" width="-webkit-fill-available">
+<img src="https://github.com/CarlosLunaGit/capl-lint-extension/blob/master/images/triggering-extension.gif?raw=true" width="-webkit-fill-available">
 
 ## Examples
 
