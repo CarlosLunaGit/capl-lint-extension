@@ -14,10 +14,11 @@ Feedback and new features please contact us at: aess.technologies@gmail.com
     3. [Not allowed statements within VARIABLES Block](#anchor-3)
     4. [Missing semicolons for Line statements](#anchor-4)
     5. [Duplicated variables declaration](#anchor-5)
-    6. [Declaration of local VARIABLES not at the beginning portion of a FUNCTION](#anchor-6)
-    7. Missing comma to separate PARAMETERS in function declaration (Work in progress)
-    8. Wrong FUNCTION declaration types (Work in progress)
-    9. Parse errors
+    6. [Overwriting variable initialized values](#anchor-6)
+    7. [Declaration of local VARIABLES not at the beginning portion of a FUNCTION](#anchor-7)
+    8. Missing comma to separate PARAMETERS in function declaration (Work in progress)
+    9. Wrong FUNCTION declaration types (Work in progress)
+    10. Parse errors
         * Unexpected literals
 
 ## Usage
@@ -119,6 +120,31 @@ Errors:
 7.        }
 8.  void MainTest ()
 9.        {
+10.            int localVar1;
+11.            int localVar1;// Duplicated variable
+12.            z = x + y;
+13.
+14.            write("%d",z);
+15.
+16.	      }
+```
+
+Errors:
+* line: 11, error: 'ERROR: Variable already declared in a nested scope at row 10'
+
+---
+6. <h3 id="anchor-6">Overwriting variable initialized values (Scoped to the active file)</h3>
+
+```cpp
+1.  variables
+2.        {
+3.            byte variable1[3]={0x01,0x02,0x03};
+4.            int x = 10;
+5.            int y = 10;
+6.            int z = 20;
+7.        }
+8.  void MainTest ()
+9.        {
 10.            int z; // Duplicated variable
 11.            z = x + y;
 12.
@@ -128,10 +154,10 @@ Errors:
 ```
 
 Errors:
-* line: 10, error: 'ERROR: Variable already declared at row 6'
+* line: 10, error: 'WARNING: Variable value initialized at row 6 will be overwritten by the new value at row 10. Statement: - int z;'
 
 ---
-6. <h3 id="anchor-6">Declaration of local VARIABLES not at the beginning portion of a FUNCTION</h3>
+7. <h3 id="anchor-7">Declaration of local VARIABLES not at the beginning portion of a FUNCTION</h3>
 
 ```cpp
 1.  /*@!Encoding:1252*/
@@ -213,5 +239,11 @@ This extension contributes the following settings:
 
 * Support for Variables not declared at the start of a block and duplicated variable declaration.
 * Stats section on report (Shows only total number of errors)
+
+---
+
+### 0.0.12
+
+* Adds WARNINGS error Types
 
 ---

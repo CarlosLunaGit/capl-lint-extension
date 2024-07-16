@@ -140,14 +140,31 @@ export function activate(context: vscode.ExtensionContext) {
 
 }
 
+function countErrorsByType(errors: any) {
+    const errorCount = {
+        ERROR: 0,
+        WARNING: 0,
+        TOTAL:0
+    };
 
+    errors.forEach((error: { type: string; }) => {
+        if (error.type.toUpperCase() === 'ERROR') {
+            errorCount.ERROR++;
+        } else if (error.type.toUpperCase() === 'WARNING') {
+            errorCount.WARNING++;
+        }
+        errorCount.TOTAL++;
+    });
+
+    return errorCount;
+}
 
 
 function getWebviewContent(errors: any, fileName: string | undefined) {
     // Start the HTML structure
     let contentHtml;
-    let errorsCount = errors.errors.length;
-    if (errorsCount === 0) {
+    let errorsCount = countErrorsByType(errors.errors);
+    if (errorsCount.TOTAL === 0) {
         contentHtml =`
                 <div class="error">
                     <div class="content" id="" style="display: block;">
@@ -159,7 +176,7 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
         contentHtml = errors.errors.map((error: any, index: any) => {
             return `
                 <div class="error">
-                    <button onclick="toggleDetail(${index})" class="collapsible">Error on Line: ${error.line}</button>
+                    <button onclick="toggleDetail(${index})" class="collapsible ${error.type}">Error on Line: ${error.line}</button>
                     <div class="content" id="detail-${index}" style="display: none;">
                         <p>${error.error}</p>
                     </div>
@@ -204,6 +221,12 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
                 border-radius: 5px;
                 margin-top: 0.2em;
                 margin-bottom: 0.2em;
+            }
+            .Error {
+                border: 1px solid #e74c3c;
+            }
+            .Warning {
+                border: 1px solid #f39c12;
             }
             .active, .collapsible:hover {
                 background-color: #555;
@@ -347,13 +370,15 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
                         <div class="stats-cards">
                             <div class="card lint-errors">
                                 <h3>Lint Errors</h3>
-                                <p>${errorsCount}</p>
+                                <p>${errorsCount.ERROR}</p>
                             </div>
-                            <!--
+
                             <div class="card warnings">
                                 <h3>Warnings</h3>
-                                <p>5</p>
+                                <p>${errorsCount.WARNING}</p>
+
                             </div>
+                            <!--
                             <div class="card style-errors">
                                 <h3>Style Errors</h3>
                                 <p>3</p>
