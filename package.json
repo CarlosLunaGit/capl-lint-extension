@@ -8,7 +8,7 @@
   },
   "description": "Elevate your CAPL coding experience with the CAPL Linter VS Code Extension! Designed specifically for CAPL (CAN Application Programming Language) developers, this powerful tool integrates seamlessly into your VS Code environment, offering real-time linting, code analysis, and auto-correction features that boost productivity and ensure code quality.",
   "icon": "images/CAPLLinter128.png",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "engines": {
     "vscode": "^1.88.0"
   },

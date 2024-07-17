@@ -6,6 +6,10 @@ Feedback and new features please contact us at: aess.technologies@gmail.com
 
 :)
 
+## User interface
+
+<img src="https://github.com/CarlosLunaGit/capl-lint-extension/blob/master/images/UserInterface.png?raw=true" width="-webkit-fill-available">
+
 ## Features
 
 * Static code analisys for detection of:
@@ -130,7 +134,7 @@ Errors:
 ```
 
 Errors:
-* line: 11, error: 'ERROR: Variable already declared in a nested scope at row 10'
+* line: 11, error: 'ERROR: Variable already declared at the same local scope at row 10'
 
 ---
 6. <h3 id="anchor-6">Overwriting variable initialized values (Scoped to the active file)</h3>
@@ -245,5 +249,6 @@ This extension contributes the following settings:
 ### 0.0.12
 
 * Adds WARNINGS error Types
+* General Bugs fixing
 
 ---
