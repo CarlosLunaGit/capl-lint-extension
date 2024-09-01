@@ -3,6 +3,8 @@
 // import * as vscode from 'vscode';
 
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 import { lintDocument } from './lint';
 
 const diagnosticsCollection = vscode.languages.createDiagnosticCollection('caplLint');
@@ -22,22 +24,28 @@ function updateDiagnostics(document: vscode.TextDocument, errors: any[]): void {
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    const diagnosticsCollection = vscode.languages.createDiagnosticCollection('caplLint');
+    context.subscriptions.push(diagnosticsCollection);
 
-	console.log('Extension "capl-lint" is now active!');
+    let includeFileProvider = new IncludeFileTreeProvider();
 
-	let disposable = vscode.commands.registerCommand('capl-linter.lint', async () => {
-		vscode.window.showInformationMessage('Loading extension CAPL-lint!');
+    // Register the tree view provider
+    vscode.window.registerTreeDataProvider('includeFileExplorer', includeFileProvider);
 
-		const columnToShowIn = vscode.window.activeTextEditor
+    // Register command for linting
+    let disposable = vscode.commands.registerCommand('capl-linter.lint', async () => {
+        vscode.window.showInformationMessage('Loading extension CAPL-lint!');
+
+        const columnToShowIn = vscode.window.activeTextEditor
             ? vscode.window.activeTextEditor.viewColumn
             : undefined;
 
-		var panel = vscode.window.createWebviewPanel(
-			'CAPLLinter',
-			'CAPL-Linter Extension',
-			columnToShowIn ? vscode.ViewColumn.Beside : vscode.ViewColumn.One,
-			{ enableScripts: true }
-		);
+        const panel = vscode.window.createWebviewPanel(
+            'CAPLLinter',
+            'CAPL-Linter Extension',
+            columnToShowIn ? vscode.ViewColumn.Beside : vscode.ViewColumn.One,
+            { enableScripts: true }
+        );
 
         const highlightDecorationType = vscode.window.createTextEditorDecorationType({
             backgroundColor: 'rgba(255,0,0,0.3)',
@@ -51,73 +59,47 @@ export function activate(context: vscode.ExtensionContext) {
             }
         });
 
-		panel.webview.onDidReceiveMessage(
-            async message => {
-                const editors = vscode.window.visibleTextEditors;
-                let editor;
-
-                switch (message.command) {
-                    case 'scrollToLine':
-
-                        for (let index = 0; index < editors.length; index++) {
-
-                            if (editors[index].document.fileName.includes(message.target)) {
-                                editor = editors[index];
-                            }
-
-
-                        }
-
-                        if (editor !== undefined) {
-                            const line = message.line - 1;
-                            const range = editor.document.lineAt(line).range;
-                            editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
-
-                            // Clear previous decorations
-                            editor.setDecorations(highlightDecorationType, []);
-
-                            // Set new decorations
-                            const decoration = {
-                                range: new vscode.Range(line, 0, line, Number.MAX_VALUE),
-                                hoverMessage: new vscode.MarkdownString(`**${message.message}**`)
-                            };
-                            editor.setDecorations(highlightDecorationType, [decoration]);
-                        }
-
-                        break;
-
-                    case 'retriggerLint':
-
-                        for (let index = 0; index < editors.length; index++) {
-                            if (editors[index].document.fileName.includes(message.target)) {
-                                editor = editors[index];
-                            }
-
-                        }
-                        if (editor) {
-                            const document = editor.document;
-                            const lintErrors = await lintDocument(document);
-                            const fileName = editor.document.fileName.split('\\').pop();
-                            panel.webview.html = getWebviewContent(lintErrors, fileName);
-                        }
-                        break;
-                }
-            },
-            undefined,
-            context.subscriptions
-        );
-
-		const editor = vscode.window.activeTextEditor;
-		if (editor) {
-			const document = editor.document;
-			const lintErrors = await lintDocument(document);
-			const fileName = editor.document.fileName.split('\\').pop();
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+            const document = editor.document;
+            const lintErrors = await lintDocument(document);
+            const fileName = path.basename(editor.document.fileName);
             panel.webview.html = getWebviewContent(lintErrors, fileName);
-		}
 
-        // Update contents based on view state changes
-        vscode.window.onDidChangeActiveTextEditor(
-            e => {
+            // Update the tree view for the active document
+            includeFileProvider.refresh(document.fileName);
+        }
+
+        panel.webview.onDidReceiveMessage(async message => {
+            const editor = vscode.window.visibleTextEditors.find(e => e.document.fileName.includes(message.target));
+            if (!editor) {
+                return;
+            }
+
+            switch (message.command) {
+                case 'scrollToLine':
+                    const line = message.line - 1;
+                    const range = editor.document.lineAt(line).range;
+                    editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
+                    editor.setDecorations(highlightDecorationType, [
+                        {
+                            range,
+                            hoverMessage: new vscode.MarkdownString(`**${message.message}**`)
+                        }
+                    ]);
+                    break;
+
+                case 'retriggerLint':
+                    const document = editor.document;
+                    const lintErrors = await lintDocument(document);
+                    const fileName = path.basename(editor.document.fileName);
+                    panel.webview.html = getWebviewContent(lintErrors, fileName);
+                    break;
+            }
+        });
+
+        vscode.window.onDidChangeActiveTextEditor(e => {
+            if (e?.document) {
 
                 let newFileInScope = e?.document.fileName.split('\\').pop();
                 console.log(newFileInScope);
@@ -127,18 +109,20 @@ export function activate(context: vscode.ExtensionContext) {
                     panel.webview.postMessage({ command: 'updateTargetFile', target: newFileInScope });
 
                 }
-            },
-            null,
-            context.subscriptions
-        );
-	});
 
+                includeFileProvider.refresh(e.document.fileName);
+            }
+        }, null, context.subscriptions);
+    });
 
-	context.subscriptions.push(disposable);
+    context.subscriptions.push(disposable);
 
-
-
+    // Handle initial activation of the extension by setting the tree view based on the active editor
+    if (vscode.window.activeTextEditor) {
+        includeFileProvider.refresh(vscode.window.activeTextEditor.document.fileName);
+    }
 }
+
 
 function countErrorsByType(errors: any) {
     const errorCount = {
@@ -478,6 +462,74 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
     `;
 }
 
+// File tree view for the extension Start
+
+class IncludeFileTreeProvider implements vscode.TreeDataProvider<IncludeFileTreeItem> {
+    private _onDidChangeTreeData: vscode.EventEmitter<IncludeFileTreeItem | undefined | void> = new vscode.EventEmitter<IncludeFileTreeItem | undefined | void>();
+    readonly onDidChangeTreeData: vscode.Event<IncludeFileTreeItem | undefined | void> = this._onDidChangeTreeData.event;
+
+    private treeItems: IncludeFileTreeItem[] = [];
+
+    refresh(filePath: string): void {
+        this.treeItems = this.getTreeItemsForFile(filePath);
+        this._onDidChangeTreeData.fire();
+    }
+
+    getTreeItem(element: IncludeFileTreeItem): vscode.TreeItem {
+        return element;
+    }
+
+    getChildren(element?: IncludeFileTreeItem): IncludeFileTreeItem[] {
+        if (!element) {
+            return this.treeItems;
+        } else {
+            return [];
+        }
+    }
+
+    private getTreeItemsForFile(filePath: string): IncludeFileTreeItem[] {
+        const includes = parseCAPLFile(filePath);
+        return includes.map(includePath => {
+            const absolutePath = path.resolve(path.dirname(filePath), includePath);
+            return new IncludeFileTreeItem(path.basename(absolutePath), vscode.TreeItemCollapsibleState.None, absolutePath);
+        });
+    }
+}
+
+class IncludeFileTreeItem extends vscode.TreeItem {
+    constructor(
+        public readonly label: string,
+        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public readonly filePath: string
+    ) {
+        super(label, collapsibleState);
+        this.tooltip = filePath;
+        this.command = {
+            command: 'vscode.open',
+            title: 'Open File',
+            arguments: [vscode.Uri.file(filePath)],
+        };
+    }
+}
+
+function parseCAPLFile(filePath: string): string[] {
+    const content = fs.readFileSync(filePath, 'utf-8');
+    return extractIncludes(content);
+}
+
+function extractIncludes(content: string): string[] {
+    const includeRegex = /#include\s+["']([^"']+)["']/g;
+    const includes: string[] = [];
+    let match;
+    while ((match = includeRegex.exec(content)) !== null) {
+        includes.push(match[1]);
+    }
+    return includes;
+}
+
+
+
+// File tree view for the extension End
 
 
 // This method is called when your extension is deactivated

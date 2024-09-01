@@ -25,6 +25,9 @@ Feedback and new features please contact us at: aess.technologies@gmail.com
     10. Parse errors
         * Unexpected literals
 
+* Include Files explorer
+    1. [Shows the current's file dependencies in the explorer view](#anchor-8)
+
 ## Usage
 
 Just trigger the extension while having an active file, it will take the active file and perform the analysis for you.
@@ -196,6 +199,16 @@ Errors:
 * line: 22, error: 'ERROR: On statement \"int w = 10;\" (unexpected \"Declaration of local VARIABLES must happen at the beginning of a FUNCTION block\")'
 
 ---
+8. <h3 id="anchor-8">Shows the current's file dependencies in the explorer view</h3>
+
+When a file becomes the "active file" the Explorer view will get updated with the list of INCLUDE files, there you can click the file name to quickly jump into it.
+
+If the explorer view is closed, activate the view and collapse the INCLUDE FILES dropdown as shown below:
+
+<img src="https://github.com/CarlosLunaGit/capl-lint-extension/blob/master/images/triggering-extension.gif?raw=true" width="-webkit-fill-available">
+
+
+---
 
 ## Requirements
 
@@ -249,6 +262,13 @@ This extension contributes the following settings:
 ### 0.0.12
 
 * Adds WARNINGS error Types
+* General Bugs fixing
+
+---
+
+### 0.0.14
+
+* Adds INCLUDE FILES EXPLORER VIEW
 * General Bugs fixing
 
 ---
