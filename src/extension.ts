@@ -243,7 +243,7 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
 
                 }
             .tab {
-                overflow: hidden;
+
                 border-bottom: 1px solid #ccc;
                 width: -webkit-fill-available;
             }

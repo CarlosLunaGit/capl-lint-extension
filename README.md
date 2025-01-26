@@ -6,6 +6,11 @@ Feedback and new features please contact us at: aess.technologies@gmail.com
 
 :)
 
+Would you like to support this project?, Why not buying us a Coffee? :coffee:
+
+[Donate with Stripe](https://buy.stripe.com/3cs6poeID2nKaDm7ss) ;)
+
+
 ## User interface
 
 <img src="https://github.com/CarlosLunaGit/capl-lint-extension/blob/master/images/UserInterface.png?raw=true" width="-webkit-fill-available">
@@ -13,20 +18,20 @@ Feedback and new features please contact us at: aess.technologies@gmail.com
 ## Features
 
 * Static code analisys for detection of:
-    1. [Missing # for Include's statements](#anchor-1)
-    2. [Not allowed statements within INCLUDES Block](#anchor-2)
-    3. [Not allowed statements within VARIABLES Block](#anchor-3)
-    4. [Missing semicolons for Line statements](#anchor-4)
-    5. [Duplicated variables declaration](#anchor-5)
-    6. [Overwriting variable initialized values](#anchor-6)
-    7. [Declaration of local VARIABLES not at the beginning portion of a FUNCTION](#anchor-7)
+    1. [Missing # for Include's statements](#anchor-101)
+    2. [Not allowed statements within INCLUDES Block](#anchor-102)
+    3. [Not allowed statements within VARIABLES Block](#anchor-103)
+    4. [Missing semicolons for Line statements](#anchor-104)
+    5. [Duplicated variables declaration](#anchor-105)
+    6. [Overwriting variable initialized values](#anchor-106)
+    7. [Declaration of local VARIABLES not at the beginning portion of a FUNCTION](#anchor-107)
     8. Missing comma to separate PARAMETERS in function declaration (Work in progress)
     9. Wrong FUNCTION declaration types (Work in progress)
     10. Parse errors
         * Unexpected literals
 
 * Include Files explorer
-    1. [Shows the current's file dependencies in the explorer view](#anchor-8)
+    1. [Shows the current's file dependencies in the explorer view](#anchor-201)
 
 ## Usage
 
@@ -36,7 +41,9 @@ Just trigger the extension while having an active file, it will take the active 
 
 ## Examples
 
-1. <h3 id="anchor-1">Missing # for Include's statements</h3>
+### Static code analisys for detection of:
+
+1. <h3 id="anchor-101">Missing # for Include's statements</h3>
 
 ```cpp
 1.  includes
@@ -51,7 +58,7 @@ Errors:
 * line: 5, error: 'ERROR: On statement \"include \"..\\TestLibraries\\utils.cin\"\" (expecting \"#\")'
 
 ---
-2. <h3 id="anchor-2">Not allowed statements within INCLUDES Block</h3>
+2. <h3 id="anchor-102">Not allowed statements within INCLUDES Block</h3>
 
 ```cpp
 1.  includes
@@ -67,7 +74,7 @@ Errors:
 * line: 6, error: 'ERROR: On statement \"byte variable1[3]={0x01,0x02,0x03};\" (unexpected \"statement, only \"#include\" statements are allowed within the Include blocks\")'
 
 ---
-3. <h3 id="anchor-3">Not allowed statements within VARIABLES Block</h3>
+3. <h3 id="anchor-103">Not allowed statements within VARIABLES Block</h3>
 
 ```cpp
 1.  variables
@@ -85,7 +92,7 @@ Errors:
 * line: 8, error: 'ERROR: On statement "#include "..\\myLibraries\\utils.cin"" (unexpected "statement, only variables definitions and initializations are allowed within the Variable block")''
 
 ---
-4. <h3 id="anchor-4">Missing semicolons for Line statements</h3>
+4. <h3 id="anchor-104">Missing semicolons for Line statements</h3>
 
 ```cpp
 1.  variables
@@ -115,7 +122,7 @@ Errors:
 * line: 18, error: 'ERROR: On statement \"write(\"%d\",w)\" (expecting ";")'
 
 ---
-5. <h3 id="anchor-5">Duplicated variables declaration (Scoped to the active file)</h3>
+5. <h3 id="anchor-105">Duplicated variables declaration (Scoped to the active file)</h3>
 
 ```cpp
 1.  variables
@@ -140,7 +147,7 @@ Errors:
 * line: 11, error: 'ERROR: Variable already declared at the same local scope at row 10'
 
 ---
-6. <h3 id="anchor-6">Overwriting variable initialized values (Scoped to the active file)</h3>
+6. <h3 id="anchor-106">Overwriting variable initialized values (Scoped to the active file)</h3>
 
 ```cpp
 1.  variables
@@ -164,7 +171,7 @@ Errors:
 * line: 10, error: 'WARNING: Variable value initialized at row 6 will be overwritten by the new value at row 10. Statement: - int z;'
 
 ---
-7. <h3 id="anchor-7">Declaration of local VARIABLES not at the beginning portion of a FUNCTION</h3>
+7. <h3 id="anchor-107">Declaration of local VARIABLES not at the beginning portion of a FUNCTION</h3>
 
 ```cpp
 1.  /*@!Encoding:1252*/
@@ -199,7 +206,20 @@ Errors:
 * line: 22, error: 'ERROR: On statement \"int w = 10;\" (unexpected \"Declaration of local VARIABLES must happen at the beginning of a FUNCTION block\")'
 
 ---
-8. <h3 id="anchor-8">Shows the current's file dependencies in the explorer view</h3>
+8. <h3 id="anchor-108">Missing comma to separate PARAMETERS in function declaration (Work in progress)</h3>
+
+```cpp
+1.
+```
+
+Errors:
+* tbd
+
+---
+
+### Include Files explorer:
+
+1. <h3 id="anchor-201">Shows the current's file dependencies in the explorer view</h3>
 
 When a file becomes the "active file" the Explorer view will get updated with the list of INCLUDE files, there you can click the file name to quickly jump into it.
 
