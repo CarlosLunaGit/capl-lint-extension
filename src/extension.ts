@@ -160,9 +160,9 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
         contentHtml = errors.errors.map((error: any, index: any) => {
             return `
                 <div class="error">
-                    <button onclick="toggleDetail(${index})" class="collapsible ${error.type}">Error on Line: ${error.line}</button>
+                    <button onclick="toggleDetail(${index})" class="collapsible ${error.type}">Error on Line: ${error.row}</button>
                     <div class="content" id="detail-${index}" style="display: none;">
-                        <p>${error.error}</p>
+                        <p>${error.message}</p>
                     </div>
                 </div>
             `;
