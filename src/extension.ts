@@ -128,6 +128,7 @@ function countErrorsByType(errors: any) {
     const errorCount = {
         ERROR: 0,
         WARNING: 0,
+        INFO: 0,
         TOTAL:0
     };
 
@@ -136,6 +137,8 @@ function countErrorsByType(errors: any) {
             errorCount.ERROR++;
         } else if (error.type.toUpperCase() === 'WARNING') {
             errorCount.WARNING++;
+        } else if (error.type.toUpperCase() === 'INFO') {
+            errorCount.INFO++;
         }
         errorCount.TOTAL++;
     });
@@ -160,7 +163,7 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
         contentHtml = errors.errors.map((error: any, index: any) => {
             return `
                 <div class="error">
-                    <button onclick="toggleDetail(${index})" class="collapsible ${error.type}">Error on Line: ${error.row}</button>
+                    <button onclick="toggleDetail(${index})" data-line=${error.row} data-inscidentType=${error.type} class="collapsible ${error.type}">${error.type} on Line: ${error.row}</button>
                     <div class="content" id="detail-${index}" style="display: none;">
                         <p>${error.message}</p>
                     </div>
@@ -211,6 +214,9 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
             }
             .Warning {
                 border: 1px solid #f39c12;
+            }
+            .Info {
+                border: 1px solid rgb(18, 172, 243);
             }
             .active, .collapsible:hover {
                 background-color: #555;
@@ -321,6 +327,11 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
                 border: 1px solid #f39c12; /* Orange for warnings */
             }
 
+            .info {
+                border: 1px solid rgb(18, 172, 243);
+            }
+
+
             .style-errors {
                 border: 1px solid #3498db; /* Blue for style errors */
             }
@@ -341,7 +352,7 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
 
 				<div id="WorkingArea" class="tabcontent action-label">
                     <div class="section">
-                        <h2>Lint Errors</h2>
+                        <h2>Linter Results</h2>
                         <div class="section"><label for="fileName">Active File:</label></div>
                         <input type="text" class="fileName" id="fileName" value="${fileName}" readonly>
                     </div>
@@ -360,6 +371,12 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
                             <div class="card warnings">
                                 <h3>Warnings</h3>
                                 <p>${errorsCount.WARNING}</p>
+
+                            </div>
+
+                            <div class="card info">
+                                <h3>Info</h3>
+                                <p>${errorsCount.INFO}</p>
 
                             </div>
                             <!--
@@ -419,12 +436,14 @@ function getWebviewContent(errors: any, fileName: string | undefined) {
 
 			document.querySelectorAll('.collapsible').forEach((btn, idx) => {
                 btn.onclick = function () {
-                    const lineNum = parseInt(this.innerText.split('Error on Line: ')[1]);
+                    const lineNum = this.dataset.line;
+                    const incidentType = this.dataset.inscidenttype;
+
                     vscode.postMessage({
                         command: 'scrollToLine',
                         target: document.getElementById('fileName').value,
                         line: lineNum,
-                        message: \`Check lint error at line \${lineNum}\` // Message you want to show in tooltip
+                        message: \`Check linter \${incidentType} at line \${lineNum}\` // Message you want to show in tooltip
                     });
 					toggleDetail(idx);
                 };
