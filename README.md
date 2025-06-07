@@ -1,6 +1,6 @@
 # capl-lint README
 
-The extension "capl-lint", allows you to manage your CAPL code analysis, view results, and customize your linting preferences.
+The extension "capl-lint", allows you to manage your CAPL code static analysis, view results, and customize your linting preferences.
 
 Feedback and new features please contact us at: aess.technologies@gmail.com
 
